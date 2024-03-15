@@ -2,32 +2,35 @@ package io.github.truemajner;
 
 import io.github.truemajner.Components.CanvasPanel;
 import io.github.truemajner.Components.GraphPanel;
+import io.github.truemajner.Config;
+import io.github.truemajner.Game;
+import io.github.truemajner.Stat;
+import io.github.truemajner.Utils;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ArrayVisualization extends JFrame {
     private static final int WIDTH = 976;
     private static final int HEIGHT = 600;
 
+    private Game game;
     private CanvasPanel canvasPanel;
     private JTextField skipToField;
     private JTextField waitTimeField;
     private JTextField frequencyField;
     private List<JLabel> statisticLabels;
-    private Game game;
     private JTabbedPane tabbedPane;
     private GraphPanel avgDurationGraph;
     private GraphPanel stepsPerEpochGraph;
 
-
     public ArrayVisualization(Game game) {
-        //todo : В отдельный поток
         this.game = game;
         setTitle("Evolution");
         setSize(WIDTH, HEIGHT);
@@ -46,12 +49,9 @@ public class ArrayVisualization extends JFrame {
         add(inputPanel, BorderLayout.SOUTH);
         add(statisticPanel, BorderLayout.NORTH);
 
-        tabbedPane.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                avgDurationGraph.setActive(tabbedPane.getSelectedIndex() == 1);
-                stepsPerEpochGraph.setActive(tabbedPane.getSelectedIndex() == 1);
-            }
+        tabbedPane.addChangeListener(e -> {
+            avgDurationGraph.setActive(tabbedPane.getSelectedIndex() == 1);
+            stepsPerEpochGraph.setActive(tabbedPane.getSelectedIndex() == 1);
         });
     }
 
@@ -59,11 +59,11 @@ public class ArrayVisualization extends JFrame {
         JPanel graphPanel = new JPanel(new GridLayout(2, 1));
 
         List<Double> avgDurationData = game.getEpochData();
-        avgDurationGraph = new GraphPanel("Средняя продожительность эпохи за последние 100 эпох. (Одно значение каждые 100 эпох)", avgDurationData, 250);
+        avgDurationGraph = new GraphPanel("Average Epoch Duration for Last 100 Epochs (One Value per 100 Epochs)", avgDurationData, 250);
         graphPanel.add(avgDurationGraph);
 
         List<Long> stepsPerEpochData = game.getEpochAvgData();
-        stepsPerEpochGraph = new GraphPanel("Средняя продолжительность эпохи за все прежние эпохи. (Одно значение каждые 100 эпох)", stepsPerEpochData, 250);
+        stepsPerEpochGraph = new GraphPanel("Average Epoch Duration for All Previous Epochs (One Value per 100 Epochs)", stepsPerEpochData, 250);
         graphPanel.add(stepsPerEpochGraph);
 
         return graphPanel;
@@ -91,21 +91,16 @@ public class ArrayVisualization extends JFrame {
 
     private JPanel createInputPanel() {
         JPanel panel = new JPanel();
-        JLabel skipToLabel = new JLabel("Пропуск до:");
-        JLabel waitTimeLabel = new JLabel("Ожидание:");
-        JLabel frequencyLabel = new JLabel("Частота:");
+        JLabel skipToLabel = new JLabel("Skip to:");
+        JLabel waitTimeLabel = new JLabel("Wait time:");
+        JLabel frequencyLabel = new JLabel("Frequency:");
 
         skipToField = new JTextField(5);
         waitTimeField = new JTextField(5);
         frequencyField = new JTextField(5);
 
-        JButton sendButton = new JButton("Отправить");
-        sendButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                sendDataToBackend();
-            }
-        });
+        JButton sendButton = new JButton("Send");
+        sendButton.addActionListener(e -> sendDataToBackend());
 
         panel.add(skipToLabel);
         panel.add(skipToField);
@@ -118,21 +113,16 @@ public class ArrayVisualization extends JFrame {
         return panel;
     }
 
-
     private void sendDataToBackend() {
         String skipToRaw = skipToField.getText();
         String waitTimeRaw = waitTimeField.getText();
         String frequencyRaw = frequencyField.getText();
 
-        if(!Utils.isInteger(skipToRaw)) skipToRaw = String.valueOf(Config.getSkipTo());
-        if(!Utils.isInteger(waitTimeRaw)) waitTimeRaw = String.valueOf(Config.getWaitTime());
-        if(!Utils.isInteger(frequencyRaw)) frequencyRaw = String.valueOf(Config.getFrequency());
+        int skipTo = Utils.isInteger(skipToRaw) ? Math.abs(Integer.parseInt(skipToRaw)) : Config.getSkipTo();
+        int waitTime = Utils.isInteger(waitTimeRaw) ? Math.abs(Integer.parseInt(waitTimeRaw)) : Config.getWaitTime();
+        int frequency = Utils.isInteger(frequencyRaw) ? Math.abs(Integer.parseInt(frequencyRaw)) : Config.getFrequency();
 
-        int skipTo = Math.abs(Integer.parseInt(skipToRaw));
-        int waitTime = Math.abs(Integer.parseInt(waitTimeRaw));
-        int frequency = Math.abs(Integer.parseInt(frequencyRaw));
-
-        if(frequency < 1) frequency = 1;
+        frequency = Math.max(frequency, 1);
 
         System.out.println("Skip to: " + skipTo + ", Wait time: " + waitTime + ", Frequency: " + frequency);
 
@@ -144,6 +134,4 @@ public class ArrayVisualization extends JFrame {
     public void updateCanvas() {
         canvasPanel.repaint();
     }
-
-
 }

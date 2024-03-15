@@ -5,6 +5,16 @@ public class Config {
     static int waitTime = 1000;
     static int skipTo = 0;
     static int frequency = 1;
+    static boolean loadLast = false;
+    static int MUTANT_COUNT = 4;
+
+    public static int getMutantCount() {
+        return MUTANT_COUNT;
+    }
+
+    public static boolean isLoadLast() {
+        return loadLast;
+    }
 
     public static boolean isForceDisableShow() {
         return forceDisableShow;

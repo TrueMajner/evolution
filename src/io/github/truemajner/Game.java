@@ -22,6 +22,7 @@ public class Game {
     public static int MAX_EPOCH_COUNT = Integer.MAX_VALUE;
     private int bestScore = 0;
     private ArrayVisualization arrayVisualization;
+    private int realEpoch = 0;
 
     private ArrayVisualization getArrayVisualization() {
         return arrayVisualization;
@@ -87,6 +88,11 @@ public class Game {
 
         return false;
     }
+
+    public void setBestScore(int bestScore) {
+        this.bestScore = bestScore;
+    }
+
     public List<Stat> getStatistics () {
         return List.of(
                 new Stat("Epoch", epoch),
@@ -154,6 +160,14 @@ public class Game {
         return epochData;
     }
 
+    public int getRealEpoch() {
+        return realEpoch;
+    }
+
+    public void setRealEpoch(int realEpoch) {
+        this.realEpoch = realEpoch;
+    }
+
     void start() {
         epoch = 0;
         epochData.add(0d);
@@ -175,7 +189,7 @@ public class Game {
                 if(epoch % 1000 == 0) {
                     last1000EpochCalculationTime = new Date().getTime() - last1000EpochCalculationTime;
 
-                    System.out.println("Epoch " + epoch + " avg " + String.valueOf(totalSteps / epoch).substring(0, Math.min(String.valueOf(totalSteps / epoch).length(), 6)) + " current " + step + " time " + last1000EpochCalculationTime);
+                    System.out.println("Epoch " + (epoch+realEpoch) + " avg " + String.valueOf(totalSteps / epoch).substring(0, Math.min(String.valueOf(totalSteps / epoch).length(), 6)) + " current " + step + " time " + last1000EpochCalculationTime);
 
                     last1000EpochCalculationTime = new Date().getTime();
                 }
@@ -190,7 +204,7 @@ public class Game {
 
                 FileWriter writer = null;
                 try {
-                    writer = new FileWriter("./data/epoch" + epoch + ".txt");
+                    writer = new FileWriter("./data/epoch" + (epoch+realEpoch) + ".txt");
                     writer.write(result);
                     writer.close();
                 } catch (IOException e) {
@@ -203,9 +217,9 @@ public class Game {
             for (int i = 0; i < BOT_COUNT_EPOCH_END; i ++) {
                 Bot bot = bots.get(i);
                 newBots.add(bot);
-                for(int j = 0; j < 7; j ++) { //todo : переделать и вынести константу MUTANT_COUNT
+                for(int j = 0; j < BOT_COUNT_EPOCH_END - 1; j ++) { //todo : переделать и вынести константу MUTANT_COUNT
                     Bot newBot = bot.getClone();
-                    if(j > 4) {
+                    if(j >= BOT_COUNT_EPOCH_END - 1 - Config.getMutantCount()) {
                         newBot.mutate();
                         newBot.setEpochsSurvived(0);
                     } //todo : now epochs by genome
