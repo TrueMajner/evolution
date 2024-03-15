@@ -36,7 +36,7 @@ public class ArrayVisualization extends JFrame {
         setSize(WIDTH, HEIGHT);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        canvasPanel = new CanvasPanel();
+        canvasPanel = new CanvasPanel(game);
         JPanel inputPanel = createInputPanel();
         JPanel statisticPanel = createStatisticPanel(game.getStatistics().size());
 
@@ -53,6 +53,10 @@ public class ArrayVisualization extends JFrame {
             avgDurationGraph.setActive(tabbedPane.getSelectedIndex() == 1);
             stepsPerEpochGraph.setActive(tabbedPane.getSelectedIndex() == 1);
         });
+    }
+
+    public boolean finished() {
+        return this.canvasPanel.isFinished();
     }
 
     private JPanel createGraphPanel(Game game) {

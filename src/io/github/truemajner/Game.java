@@ -50,15 +50,16 @@ public class Game {
 
     private int totalHP = 0;
     boolean iterate() {
+        boolean show = Config.waitTime >= 0 && Config.frequency > 0 && Config.skipTo <= epoch && step % Config.frequency == 0;
+        if(Config.forceDisableShow) show = false;
+
         totalHP = 0;
 
         for (int i = 0; i < bots.size(); i ++) {
             Bot bot = bots.get(i);
             bot.run();
 
-            totalHP += bot.getHealth();
-
-            //System.out.println("epoch " + epoch + " step " + step + " bot " + i + " of " + bots.size() + " gen " + bot.getGen(bot.getPointer()) + " health " + bot.getHealth());
+            if(show) totalHP += bot.getHealth();
 
             if(bot.getHealth() <= 0) {
                 Map.getInstance().setCell(bot.getPosition(), Types.AIR);
@@ -73,13 +74,11 @@ public class Game {
 
         }
 
-        boolean show = Config.waitTime >= 0 && Config.frequency > 0 && Config.skipTo <= epoch && step % Config.frequency == 0;
-        if(Config.forceDisableShow) show = false;
-
         if(show) try {
             Thread.sleep(Config.waitTime);
             getArrayVisualization().updateCanvas();
             getArrayVisualization().updateStatisticLabels();
+            //if(!this.getArrayVisualization().finished()) waitCanvasFinish();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         } else {
@@ -126,10 +125,20 @@ public class Game {
         createStartFood();
 
         while(step < MAX_STEP_COUNT) {
-            //System.out.println("epoch " + epoch + " step " + step + " bot count " + bots.size());
             boolean result = iterate();
             step++;
             if(result) break;
+        }
+    }
+
+    private void waitCanvasFinish() {
+        while(!this.getArrayVisualization().finished()) {
+            try {
+                System.out.println("Hi");
+                Thread.sleep(10);
+            } catch (InterruptedException ignored) {
+
+            }
         }
     }
 
@@ -168,6 +177,10 @@ public class Game {
         this.realEpoch = realEpoch;
     }
 
+    public List<Bot> getBots() {
+        return bots;
+    }
+
     void start() {
         epoch = 0;
         epochData.add(0d);
@@ -195,40 +208,46 @@ public class Game {
                 }
 
                 if(step > bestScore) bestScore = step;
-                String result = "";
-                for (int i = 0; i < BOT_COUNT_EPOCH_END; i ++) {
-                    result += Utils.join(bots.get(i).getGenome(), " ") + "\n";
-                }
 
-                result += "Survived : " + step;
-
-                FileWriter writer = null;
-                try {
-                    writer = new FileWriter("./data/epoch" + (epoch+realEpoch) + ".txt");
-                    writer.write(result);
-                    writer.close();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+                saveResult();
             }
 
-            List<Bot> newBots = new ArrayList<>();
+            bots = generateNewEpochBots();
+        }
+    }
 
-            for (int i = 0; i < BOT_COUNT_EPOCH_END; i ++) {
-                Bot bot = bots.get(i);
-                newBots.add(bot);
-                for(int j = 0; j < BOT_COUNT_EPOCH_END - 1; j ++) { //todo : переделать и вынести константу MUTANT_COUNT
-                    Bot newBot = bot.getClone();
-                    if(j >= BOT_COUNT_EPOCH_END - 1 - Config.getMutantCount()) {
-                        newBot.mutate();
-                        newBot.setEpochsSurvived(0);
-                    } //todo : now epochs by genome
-                    newBots.add(newBot);
-                    //newBot.randomGenome();
-                }
+    private List<Bot> generateNewEpochBots() {
+        List<Bot> newBots = new ArrayList<>();
+
+        for (int i = 0; i < BOT_COUNT_EPOCH_END; i ++) {
+            Bot bot = bots.get(i);
+            newBots.add(bot);
+            for(int j = 0; j < BOT_COUNT_EPOCH_END - 1; j ++) {
+                Bot newBot = bot.getClone();
+                if(j >= BOT_COUNT_EPOCH_END - 1 - Config.getMutantCount()) {
+                    newBot.mutate();
+                    newBot.setEpochsSurvived(0);
+                } //todo : now epochs by genome
+                newBots.add(newBot);
             }
+        }
+        return newBots;
+    }
 
-            bots = newBots;
+    private void saveResult() {
+        String result = "";
+        for (int i = 0; i < BOT_COUNT_EPOCH_END; i ++) {
+            result += Utils.join(bots.get(i).getGenome(), " ") + "\n";
+        }
+
+        result += "Survived : " + step;
+
+        try {
+            FileWriter writer = new FileWriter("./data/epoch" + (epoch+realEpoch) + ".txt");
+            writer.write(result);
+            writer.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }

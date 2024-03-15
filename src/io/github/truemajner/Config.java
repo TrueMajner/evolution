@@ -7,6 +7,11 @@ public class Config {
     static int frequency = 1;
     static boolean loadLast = false;
     static int MUTANT_COUNT = 4;
+    static boolean DrawHealthEnabled = true;
+
+    public static boolean isDrawHealthEnabled() {
+        return DrawHealthEnabled;
+    }
 
     public static int getMutantCount() {
         return MUTANT_COUNT;

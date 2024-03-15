@@ -105,6 +105,14 @@ public class Bot {
         this.game = game;
     }
 
+    public int getX() {
+        return this.getPosition().getX();
+    }
+
+    public int getY() {
+        return this.getPosition().getY();
+    }
+
     private void increasePointer(int value) {
         this.setPointer(this.getPointer() + value);
     }
