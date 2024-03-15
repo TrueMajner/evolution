@@ -1,3 +1,5 @@
+package io.github.truemajner;
+
 public class Stat {
     String label;
     int value;

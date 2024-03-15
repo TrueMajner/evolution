@@ -1,3 +1,5 @@
+package io.github.truemajner;
+
 public class Position {
     private int x;
     private int y;

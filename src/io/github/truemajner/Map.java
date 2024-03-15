@@ -1,10 +1,10 @@
-import java.util.ArrayList;
-import java.util.List;
+package io.github.truemajner;
 
 public class Map { //todo : make not singleton
     private static Map instance;
     public static int SIZE_X = 48;
     public static int SIZE_Y = 24;
+    Package src;
     private int[][] map = new int[SIZE_X][SIZE_Y];
 
     public int getCell(int x, int y) {

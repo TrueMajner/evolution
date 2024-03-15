@@ -1,3 +1,5 @@
+package io.github.truemajner;
+
 public class Config {
     static boolean forceDisableShow = false;
     static int waitTime = 1000;

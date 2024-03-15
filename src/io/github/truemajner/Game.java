@@ -1,9 +1,8 @@
+package io.github.truemajner;
+
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -89,7 +88,6 @@ public class Game {
         return false;
     }
     public List<Stat> getStatistics () {
-        //todo : precalc
         return List.of(
                 new Stat("Epoch", epoch),
                 new Stat("Step", step),

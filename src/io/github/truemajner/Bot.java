@@ -1,4 +1,4 @@
-import java.util.Arrays;
+package io.github.truemajner;
 
 public class Bot {
     Position position;
@@ -291,7 +291,7 @@ public class Bot {
         this.genome = genome;
     }
 
-    /*private Position convert() {
+    /*private io.github.truemajner.Position convert() {
 
     }*/
 }

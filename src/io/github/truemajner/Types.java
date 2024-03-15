@@ -1,3 +1,5 @@
+package io.github.truemajner;
+
 public class Types {
     static final public int AIR = 1;
     static final public int WALL = 2;
