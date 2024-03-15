@@ -78,7 +78,7 @@ public class Game {
             Thread.sleep(Config.waitTime);
             getArrayVisualization().updateCanvas();
             getArrayVisualization().updateStatisticLabels();
-            //if(!this.getArrayVisualization().finished()) waitCanvasFinish();
+            if(!this.getArrayVisualization().finished()) waitCanvasFinish();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         } else {
@@ -102,12 +102,12 @@ public class Game {
         );
     }
 
-    void createStartFood() {
+    private void createStartFood() {
         for(int i = 0; i < START_FOOD_COUNT; i ++) createFood();
         for(int i = 0; i < START_POISON_COUNT; i ++) createPoison();
     }
 
-    void next() {
+    private void next() {
         step = 0;
         map.resetMap();
 
@@ -134,8 +134,7 @@ public class Game {
     private void waitCanvasFinish() {
         while(!this.getArrayVisualization().finished()) {
             try {
-                System.out.println("Hi");
-                Thread.sleep(10);
+                Thread.sleep(1);
             } catch (InterruptedException ignored) {
 
             }

@@ -69,7 +69,8 @@ public class CanvasPanel extends JPanel {
             }
         }
 
-        if(Config.isDrawHealthEnabled()) for(Bot bot : game.getBots()) {
+        if(Config.isDrawHealthEnabled()) for(int i = 0; i < game.getBots().size(); i ++) {
+            Bot bot = game.getBots().get(i);
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
             g2d.setColor(Color.WHITE);
             g2d.setFont(g2d.getFont().deriveFont((float)cellSize * 0.9f));
