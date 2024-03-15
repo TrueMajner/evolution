@@ -9,6 +9,11 @@ public class Config {
     static int MUTANT_COUNT = 4;
     static boolean FixOutputUnsync = true;
     static boolean DrawHealth = true;
+    static boolean SaveResults = true;
+
+    public static boolean saveResultsEnabled() {
+        return SaveResults;
+    }
 
     public static boolean isFixOutputUnsyncEnabled() {
         return FixOutputUnsync;

@@ -12,8 +12,8 @@ public class Game {
     long totalSteps = 0;
     List<Bot> bots = new ArrayList<>();
     Map map = Map.getInstance();
-    public static int START_FOOD_COUNT = 60;//60;
-    public static int START_POISON_COUNT = 60;//60;
+    public static int START_FOOD_COUNT = 60;
+    public static int START_POISON_COUNT = 60;
     public static double FOOD_CHANCE = (double) START_FOOD_COUNT / ((double) START_FOOD_COUNT + (double) START_POISON_COUNT);
     public static int START_BOT_COUNT = 64;
     public static int MAX_STEP_COUNT = 10000;
@@ -81,8 +81,6 @@ public class Game {
             if(!this.getArrayVisualization().finished() && Config.isFixOutputUnsyncEnabled()) waitCanvasFinish();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
-        } else {
-            //do nothing
         }
 
         return false;
@@ -208,7 +206,7 @@ public class Game {
 
                 if(step > bestScore) bestScore = step;
 
-                saveResult();
+                if(Config.saveResultsEnabled()) saveResult();
             }
 
             bots = generateNewEpochBots();
@@ -226,7 +224,7 @@ public class Game {
                 if(j >= BOT_COUNT_EPOCH_END - 1 - Config.getMutantCount()) {
                     newBot.mutate();
                     newBot.setEpochsSurvived(0);
-                } //todo : now epochs by genome
+                }
                 newBots.add(newBot);
             }
         }
@@ -234,16 +232,16 @@ public class Game {
     }
 
     private void saveResult() {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         for (int i = 0; i < BOT_COUNT_EPOCH_END; i ++) {
-            result += Utils.join(bots.get(i).getGenome(), " ") + "\n";
+            result.append(Utils.join(bots.get(i).getGenome(), " ")).append("\n");
         }
 
-        result += "Survived : " + step;
+        result.append("Survived : ").append(step);
 
         try {
             FileWriter writer = new FileWriter("./data/epoch" + (epoch+realEpoch) + ".txt");
-            writer.write(result);
+            writer.write(result.toString());
             writer.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
