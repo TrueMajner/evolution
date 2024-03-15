@@ -78,7 +78,7 @@ public class Game {
             Thread.sleep(Config.waitTime);
             getArrayVisualization().updateCanvas();
             getArrayVisualization().updateStatisticLabels();
-            if(!this.getArrayVisualization().finished()) waitCanvasFinish();
+            if(!this.getArrayVisualization().finished() && Config.isFixOutputUnsyncEnabled()) waitCanvasFinish();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         } else {

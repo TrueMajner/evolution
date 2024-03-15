@@ -7,10 +7,15 @@ public class Config {
     static int frequency = 1;
     static boolean loadLast = false;
     static int MUTANT_COUNT = 4;
-    static boolean DrawHealthEnabled = true;
+    static boolean FixOutputUnsync = true;
+    static boolean DrawHealth = true;
+
+    public static boolean isFixOutputUnsyncEnabled() {
+        return FixOutputUnsync;
+    }
 
     public static boolean isDrawHealthEnabled() {
-        return DrawHealthEnabled;
+        return DrawHealth;
     }
 
     public static int getMutantCount() {

@@ -18,6 +18,10 @@ public class Main {
     public static void main(String[] args) {
         createDataDirectory();
 
+        if(!Config.isFixOutputUnsyncEnabled() && Config.isDrawHealthEnabled()) {
+            Utils.printWarning("Drawing health is enabled without FixOutputUnsync. This may cause unexpected errors.");
+        }
+
         Game game = new Game();
         ArrayVisualization arrayVisualization = new ArrayVisualization(game);
         arrayVisualization.setVisible(true);
