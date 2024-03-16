@@ -2,6 +2,7 @@ package io.github.truemajner;
 
 import io.github.truemajner.Components.CanvasPanel;
 import io.github.truemajner.Components.GraphPanel;
+import io.github.truemajner.Components.SettingsPanel;
 import io.github.truemajner.Config;
 import io.github.truemajner.Game;
 import io.github.truemajner.Stat;
@@ -43,6 +44,7 @@ public class ArrayVisualization extends JFrame {
         tabbedPane = new JTabbedPane();
         tabbedPane.addTab("Canvas", canvasPanel);
         tabbedPane.addTab("Graph", createGraphPanel(game));
+        tabbedPane.addTab("Settings", new SettingsPanel());
 
         setLayout(new BorderLayout());
         add(tabbedPane, BorderLayout.CENTER);

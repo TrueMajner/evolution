@@ -39,6 +39,22 @@ public class Config {
         Config.forceDisableShow = forceDisableShow;
     }
 
+    public static void setMutantCount(int mutantCount) {
+        MUTANT_COUNT = mutantCount;
+    }
+
+    public static void setFixOutputUnsync(boolean fixOutputUnsync) {
+        FixOutputUnsync = fixOutputUnsync;
+    }
+
+    public static void setDrawHealth(boolean drawHealth) {
+        DrawHealth = drawHealth;
+    }
+
+    public static void setSaveResults(boolean saveResults) {
+        SaveResults = saveResults;
+    }
+
     public static int getWaitTime() {
         return waitTime;
     }

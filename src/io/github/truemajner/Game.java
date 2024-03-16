@@ -13,7 +13,7 @@ public class Game {
     List<Bot> bots = new ArrayList<>();
     Map map = Map.getInstance();
     public static int START_FOOD_COUNT = 60;
-    public static int START_POISON_COUNT = 60;
+    public static int START_POISON_COUNT = 60; //TODO : MAKE THIS NOT STATIC
     public static double FOOD_CHANCE = (double) START_FOOD_COUNT / ((double) START_FOOD_COUNT + (double) START_POISON_COUNT);
     public static int START_BOT_COUNT = 64;
     public static int MAX_STEP_COUNT = 10000;
